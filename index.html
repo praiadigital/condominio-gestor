@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condomínio Gestor — Taxa condominial transparente | Praia Digital</title>
+<meta name="description" content="Calcule a taxa condominial justa por unidade, analise se o condomínio está caro e planeje o fundo de reserva.">
+<link rel="canonical" href="https://praia.digital/condominio-gestor/">
+<style>:root{--azul:#0a2540;--mar:#0e7490;--areia:#f8f5ef}*{margin:0;box-sizing:border-box;font-family:system-ui,sans-serif}body{background:var(--areia);color:#1e293b}header{background:linear-gradient(135deg,var(--azul),var(--mar));color:#fff;padding:2.5rem 1.5rem;text-align:center}.badge{display:inline-block;background:rgba(255,255,255,.15);padding:.25rem .8rem;border-radius:999px;font-size:.8rem;margin-bottom:.8rem}main{max-width:760px;margin:2rem auto;padding:0 1.25rem}.card{background:#fff;border-radius:1rem;padding:1.75rem;box-shadow:0 4px 24px rgba(10,37,64,.08);margin-bottom:1.5rem}label{display:block;font-weight:600;margin:1rem 0 .35rem}input,select{width:100%;padding:.7rem;border:1px solid #cbd5e1;border-radius:.5rem;font-size:1rem}button{width:100%;margin-top:1.4rem;background:var(--mar);color:#fff;border:0;padding:.9rem;font-size:1.05rem;font-weight:700;border-radius:.6rem;cursor:pointer}#out{display:none}.nums{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}.num{background:var(--areia);border-radius:.75rem;padding:1rem;text-align:center}.num b{display:block;font-size:1.35rem;color:var(--azul)}table{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:1rem}td,th{padding:.5rem;border-bottom:1px solid #e2e8f0;text-align:left}.rede{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.75rem}.rede a{background:#fff;border:1px solid #e2e8f0;border-radius:.6rem;padding:.8rem;text-decoration:none;color:var(--azul);font-weight:600;font-size:.9rem}footer{text-align:center;padding:2rem;color:#64748b;font-size:.85rem}footer a{color:var(--mar)}</style>
+</head>
+<body>
+<header><span class="badge">🛰️ App satélite de <a href="https://praia.digital" style="color:#fff">praia.digital</a></span><h1>🏢 Condomínio Gestor</h1><p>Sua taxa condominial está justa? Descubra em segundos</p></header>
+<main>
+<div class="card">
+<label>Taxa condominial mensal (R$)</label><input id="taxa" type="number" value="800">
+<label>Número de unidades</label><input id="unid" type="number" value="60">
+<label>Tipo de condomínio</label><select id="tipo"><option value="simples">Simples (sem piscina/elevador)</option><option value="padrao" selected>Padrão (piscina + elevador)</option><option value="club">Clube/resort (academia, quadras, portaria 24h)</option></select>
+<label>Valor do imóvel (R$)</label><input id="valor" type="number" value="600000">
+<button onclick="calc()">Analisar condomínio</button>
+</div>
+<div class="card" id="out"><div class="nums">
+<div class="num"><b id="pct"></b>% do valor/ano</div>
+<div class="num"><b id="receita"></b>Receita mensal do condomínio</div></div>
+<table id="bench"><tr><th>Benchmark por unidade</th><th>Faixa típica no litoral</th></tr><tr><td>Simples</td><td>R$ 350–550</td></tr><tr><td>Padrão</td><td>R$ 600–900</td></tr><tr><td>Clube/resort</td><td>R$ 1.000–1.800</td></tr></table>
+<p id="veredito" style="margin-top:1rem"></p>
+<p style="margin-top:1rem;font-size:.9rem">💡 Fundo de reserva saudável = 10% da receita anual. Inclua a taxa no custo fixo da <a href="https://praia.digital/calculadora-temporada">Calculadora de Temporada</a> e no <a href="https://praia.digital/praiascore">PraiaScore</a>.</p></div>
+<h2 style="margin:1.5rem 0 .8rem">🌐 Rede Praia Digital</h2>
+<div class="rede">
+<a href="https://praia.digital">🏠 Portal Praia Digital</a>
+<a href="https://praia.digital/iptu-litoral">🏙️ IPTU Litoral</a>
+<a href="https://praia.digital/energia-solar">☀️ Energia Solar</a>
+<a href="https://praia.digital/pet-friendly">🐾 Pet Friendly</a>
+<a href="https://praia.digital/apps">🛰️ Todos os apps</a>
+</div>
+</main>
+<footer>Feito com 🌊 pela rede <a href="https://praia.digital">Praia Digital</a> · <a href="https://github.com/praiadigital/condominio-gestor">código aberto no GitHub</a></footer>
+<script>
+const BRL=v=>'R$ '+Math.round(v).toLocaleString('pt-BR');
+const faixas={simples:[350,550],padrao:[600,900],club:[1000,1800]};
+function calc(){
+const t=+taxa.value||0,u=+unid.value||1,v=+valor.value||1,[lo,hi]=faixas[tipo.value];
+out.style.display='block';
+pct.textContent=(t*12/v*100).toFixed(1)+'%';
+receita.textContent=BRL(t*u);
+veredito.innerHTML=t<lo?`🟢 <b>Abaixo da média</b> (${BRL(lo)}–${BRL(hi)}) — ótimo, mas cheque se o fundo de reserva está sendo formado.`:t<=hi?`🟡 <b>Dentro da faixa típica</b> (${BRL(lo)}–${BRL(hi)}) para condomínio ${tipo.options[tipo.selectedIndex].text.split(' (')[0].toLowerCase()}.`:`🔴 <b>Acima da média</b> (${BRL(lo)}–${BRL(hi)}) — peça a prestação de contas na assembleia e revise contratos de limpeza/elevador.`;
+}
+</script>
+</body></html>
